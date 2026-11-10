@@ -1,0 +1,4 @@
+# Nadie debe poder abrir los archivos de configuración desde el navegador
+<FilesMatch "^config(\.ejemplo)?\.php$">
+  Require all denied
+</FilesMatch>

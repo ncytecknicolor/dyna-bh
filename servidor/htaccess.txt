@@ -1,0 +1,42 @@
+# Configuración de Apache para el sitio estático de Dynamedia (Bluehost)
+Options -MultiViews
+DirectorySlash Off
+DirectoryIndex index.html
+
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+
+# Siempre HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# www -> sin www
+RewriteCond %{HTTP_HOST} ^www\.dynamedia\.mx$ [NC]
+RewriteRule ^(.*)$ https://dynamedia.mx/$1 [R=301,L]
+
+# Formulario de contacto
+RewriteRule ^api/contact/?$ api/contact.php [L]
+
+# Redirecciones
+RewriteRule ^areas/desarrollo-web/?$ /areas/diseno-web [R=301,L]
+
+# Páginas sin ".html" (/servicios -> servicios.html)
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+?)/?$ $1.html [L]
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType video/mp4 "access plus 1 month"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>
