@@ -3,6 +3,7 @@ import ContactForm from './ContactForm';
 import Reveal from './Reveal';
 import { Tarjeta } from './ui';
 import { EMAIL, WA } from '@/lib/site';
+import Redes from './Redes';
 
 const sigue = ['Recibimos tu mensaje.', 'Te contactamos para entender tu proyecto.', 'Te enviamos una propuesta con costos y tiempos.'];
 const tarjeta = 'border border-white/15 bg-white/5 p-5 backdrop-blur';
@@ -37,6 +38,8 @@ export default function SeccionContacto({ preseleccion }: { preseleccion?: strin
               <span><span className="block text-sm text-white/60">Ubicación</span><span className="block font-semibold">Monterrey, Nuevo León</span></span>
             </Tarjeta>
           </div>
+          <p className="mt-8 text-sm font-semibold uppercase tracking-widest text-white/60">Síguenos</p>
+          <Redes className="mt-3" size={20} claseEnlace="block rounded-full border border-white/25 p-2.5 hover:border-naranja-claro hover:text-naranja-claro" />
           <h3 className="mt-10 font-display text-xl font-bold">¿Qué sigue después?</h3>
           <ol className="mt-4 space-y-3">
             {sigue.map((s, k) => (

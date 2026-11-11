@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { ruta } from '@/lib/base';
 import Link from 'next/link';
 import { X, Pause, Play, ArrowUpRight, Check } from 'lucide-react';
 import { proyectos, MOSTRAR_PENDIENTES, type Proyecto } from './proyectos';
@@ -27,7 +28,7 @@ function Fila({ items, alto, dir, dur, cta, abrir }: { items: Item[]; alto: stri
                   <span className="mx-auto max-w-[55%] truncate rounded-full bg-white px-3 py-0.5 text-[11px] font-medium text-grafito/60">{p.nombre}</span>
                 </span>
                 <span className="relative block flex-1 overflow-hidden">
-                  <Image src={p.principal.src} fill sizes="560px" alt={c > 0 ? '' : `Captura del sitio web de ${p.nombre}${p.categoria ? `, ${p.categoria.toLowerCase()}` : ''}`} className={`object-cover ${pos === 'left' ? 'object-left-top' : 'object-top'} transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none`} />
+                  <Image src={ruta(p.principal.src)} fill sizes="560px" alt={c > 0 ? '' : `Captura del sitio web de ${p.nombre}${p.categoria ? `, ${p.categoria.toLowerCase()}` : ''}`} className={`object-cover ${pos === 'left' ? 'object-left-top' : 'object-top'} transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none`} />
                   {p.categoria && <span className="absolute bottom-3 left-3 z-10 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-azul shadow">{p.categoria}</span>}
                   <span className="absolute inset-0 z-20 flex items-center justify-center bg-grafito/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
                     <span className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 font-semibold text-azul shadow-lg">Ver proyecto <ArrowUpRight size={18} /></span>
@@ -68,7 +69,7 @@ function Ficha({ p, cerrar }: { p: Proyecto; cerrar: () => void }) {
       <div className="sticky top-0 z-10 h-0">
         <button onClick={cerrar} aria-label="Cerrar ficha" className="absolute right-3 top-3 rounded-full bg-white/90 p-2 shadow hover:bg-white"><X size={22} /></button>
       </div>
-      <Image src={p.principal.src} width={p.principal.w} height={p.principal.h} alt={`Página de inicio del sitio web de ${p.nombre}, proyecto de Dynamedia`} className="h-auto w-full" />
+      <Image src={ruta(p.principal.src)} width={p.principal.w} height={p.principal.h} alt={`Página de inicio del sitio web de ${p.nombre}, proyecto de Dynamedia`} className="h-auto w-full" />
       <div className="p-6 md:p-10">
         <p className="text-sm font-semibold uppercase tracking-widest text-naranja">Proyecto</p>
         <h2 id="ficha-titulo" className="mt-1 font-display text-3xl font-extrabold text-azul md:text-4xl">{p.nombre}</h2>
@@ -103,7 +104,7 @@ function Ficha({ p, cerrar }: { p: Proyecto; cerrar: () => void }) {
               {p.galeria?.length
                 ? p.galeria.map((g) => (
                     <figure key={g.src}>
-                      <Image src={g.src} width={g.w} height={g.h} alt={g.pie ?? `Pantalla de ${p.nombre}`} className="h-auto w-full rounded-lg" />
+                      <Image src={ruta(g.src)} width={g.w} height={g.h} alt={g.pie ?? `Pantalla de ${p.nombre}`} className="h-auto w-full rounded-lg" />
                       {g.pie && <figcaption className="mt-1 text-sm text-grafito/70">{g.pie}</figcaption>}
                     </figure>
                   ))

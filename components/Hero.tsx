@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState, type PointerEvent } from 'react';
 import Image from 'next/image';
+import { ruta } from '@/lib/base';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { slides } from './heroSlides';
@@ -38,10 +39,10 @@ export default function Hero() {
           <div key={s.id} aria-hidden={!activa} aria-roledescription="slide" aria-label={`${k + 1} de ${n}`}
             className={`absolute inset-0 transition-opacity duration-700 motion-reduce:transition-none ${activa ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
             <div className="absolute inset-0" style={{ background: s.fondo }} />
-            {s.imagen && <Image src={s.imagen} alt="" fill priority={k === 0} sizes="100vw" className="object-cover" />}
-            {s.imagen2 && <Image src={s.imagen2} alt="" fill sizes="100vw" className="object-cover" style={{ clipPath: 'polygon(56% 0, 100% 0, 100% 100%, 38% 100%)' }} />}
+            {s.imagen && <Image src={ruta(s.imagen)} alt="" fill priority={k === 0} sizes="100vw" className="object-cover" />}
+            {s.imagen2 && <Image src={ruta(s.imagen2)} alt="" fill sizes="100vw" className="object-cover" style={{ clipPath: 'polygon(56% 0, 100% 0, 100% 100%, 38% 100%)' }} />}
             {s.video && activa && !fallo[s.id] && (
-              <video src={s.video} poster={s.imagen} autoPlay muted playsInline preload="metadata"
+              <video src={ruta(s.video)} poster={s.imagen ? ruta(s.imagen) : undefined} autoPlay muted playsInline preload="metadata"
                 onError={() => setFallo((f) => ({ ...f, [s.id]: true }))}
                 className="absolute inset-0 h-full w-full object-cover" />
             )}

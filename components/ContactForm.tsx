@@ -4,7 +4,9 @@ import { Check, Send, MessageCircle, Loader2 } from 'lucide-react';
 import { servicios } from '@/lib/servicios';
 import { iconos } from '@/lib/iconos';
 import { EMAIL, WA } from '@/lib/site';
+import { BASE } from '@/lib/base';
 import { Magnetico } from './ui';
+import Captcha from './Captcha';
 
 const NO_SE = 'Aún no estoy seguro';
 const cuandoOps = ['Lo antes posible', 'Este mes', 'En 2 o 3 meses', 'Solo estoy explorando'];
@@ -46,6 +48,10 @@ export default function ContactForm({ preseleccion = [] }: { preseleccion?: stri
   const [estado, setEstado] = useState<'idle' | 'enviando' | 'ok' | 'error'>('idle');
   const [web, setWeb] = useState('');
   const [codigo, setCodigo] = useState('');
+  const [captchaReq, setCaptchaReq] = useState(false);
+  const [token, setToken] = useState('');
+  const [errCaptcha, setErrCaptcha] = useState('');
+  const [resetKey, setResetKey] = useState(0);
   const t0 = useRef(0);
 
   useEffect(() => {
@@ -77,17 +83,19 @@ export default function ContactForm({ preseleccion = [] }: { preseleccion?: stri
     setErr(e);
     const primero = (['nombre', 'correo', 'mensaje'] as const).find((k) => e[k]);
     if (primero) { document.getElementById(`c-${primero}`)?.focus(); return; }
+    if (captchaReq && !token) { setErrCaptcha('Marca la casilla para confirmar que no eres un robot.'); return; }
+    setErrCaptcha('');
     setEstado('enviando');
     try {
-      const r = await fetch('/api/contact', {
+      const r = await fetch(`${BASE}/api/contact`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...d, servicios: sel, cuando: cuando || 'No indicó', web, tiempo: Date.now() - t0.current, pagina: window.location.href }),
+        body: JSON.stringify({ ...d, servicios: sel, cuando: cuando || 'No indicó', web, captcha: token, tiempo: Date.now() - t0.current, pagina: window.location.href }),
       });
-      if (!r.ok) { const j = await r.json().catch(() => null); setCodigo(j?.codigo ?? String(r.status)); }
+      if (!r.ok) { const j = await r.json().catch(() => null); setCodigo(j?.codigo ?? String(r.status)); setToken(''); setResetKey((k) => k + 1); }
       setEstado(r.ok ? 'ok' : 'error');
     } catch { setCodigo('conexion'); setEstado('error'); }
   };
-  const reiniciar = () => { setSel([]); setCuando(''); setD({ nombre: '', correo: '', telefono: '', empresa: '', mensaje: '' }); setErr({}); setCodigo(''); setEstado('idle'); t0.current = Date.now(); };
+  const reiniciar = () => { setSel([]); setCuando(''); setD({ nombre: '', correo: '', telefono: '', empresa: '', mensaje: '' }); setErr({}); setCodigo(''); setToken(''); setErrCaptcha(''); setEstado('idle'); t0.current = Date.now(); };
 
   if (estado === 'ok') {
     const rombos = [[-90, -70], [90, -80], [-110, 10], [110, 20], [-60, 90], [70, 95], [0, -110], [0, 110]];
@@ -153,6 +161,8 @@ export default function ContactForm({ preseleccion = [] }: { preseleccion?: stri
             ))}
           </div>
         </div>
+
+        <Captcha onConfig={setCaptchaReq} onToken={setToken} resetKey={resetKey} error={errCaptcha} />
 
         {estado === 'error' && (
           <p role="alert" className="mt-6 rounded-xl bg-red-50 p-4 text-sm text-red-700">No se pudo enviar tu mensaje. Escríbenos por <a href={WA} className="font-semibold underline">WhatsApp</a> o a <a href={`mailto:${EMAIL}`} className="font-semibold underline">{EMAIL}</a>.{codigo && <span className="mt-1 block text-xs text-red-700/70">Código: {codigo}</span>}</p>

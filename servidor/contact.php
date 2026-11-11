@@ -8,6 +8,11 @@ $cfg = file_exists(__DIR__ . '/config.php') ? require __DIR__ . '/config.php' : 
 $key = isset($cfg['RESEND_API_KEY']) ? $cfg['RESEND_API_KEY'] : '';
 $to = !empty($cfg['CONTACT_TO']) ? $cfg['CONTACT_TO'] : 'info@dynamedia.mx';
 $from = !empty($cfg['CONTACT_FROM']) ? $cfg['CONTACT_FROM'] : 'Dynamedia Web <onboarding@resend.dev>';
+// Captcha: 'recaptcha' (Google reCAPTCHA v2) o 'turnstile' (Cloudflare). Solo se exige si hay clave pública y secreta.
+$captcha = (isset($cfg['CAPTCHA']) && $cfg['CAPTCHA'] === 'turnstile') ? 'turnstile' : 'recaptcha';
+$ckey = isset($cfg['CAPTCHA_SITE_KEY']) ? trim($cfg['CAPTCHA_SITE_KEY']) : '';
+$csecret = isset($cfg['CAPTCHA_SECRET']) ? trim($cfg['CAPTCHA_SECRET']) : '';
+$captchaActivo = ($ckey !== '' && $csecret !== '');
 
 function salida($datos, $codigo = 200) {
   http_response_code($codigo);
@@ -27,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $partes = explode('@', $to);
   $usuario = isset($partes[0]) ? $partes[0] : '';
   $dominio = isset($partes[1]) ? $partes[1] : '';
-  salida(array('clave_configurada' => $key !== '', 'destino' => cortar($usuario, 2) . '***@' . $dominio, 'remitente' => $from));
+  salida(array('clave_configurada' => $key !== '', 'captcha_activo' => $captchaActivo, 'captcha' => $captchaActivo ? array('proveedor' => $captcha, 'clave' => $ckey) : null, 'destino' => cortar($usuario, 2) . '***@' . $dominio, 'remitente' => $from));
 }
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') salida(array('error' => 'Método no permitido', 'codigo' => 'metodo'), 405);
 
@@ -57,6 +62,27 @@ if (largo($nombre) < 2 || !filter_var($correo, FILTER_VALIDATE_EMAIL) || largo($
   salida(array('error' => 'Datos incompletos', 'codigo' => 'datos'), 400);
 }
 if ($key === '') salida(array('error' => 'Servicio de correo no configurado', 'codigo' => 'sin-clave'), 503);
+
+// Verificación del captcha con el proveedor
+if ($captchaActivo) {
+  $tok = limpio(isset($b['captcha']) ? $b['captcha'] : '', 4000);
+  if ($tok === '') salida(array('error' => 'Confirma que no eres un robot', 'codigo' => 'captcha'), 400);
+  $url = $captcha === 'turnstile' ? 'https://challenges.cloudflare.com/turnstile/v0/siteverify' : 'https://www.google.com/recaptcha/api/siteverify';
+  $cv = curl_init($url);
+  curl_setopt_array($cv, array(
+    CURLOPT_POST => true,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT => 10,
+    CURLOPT_POSTFIELDS => http_build_query(array('secret' => $csecret, 'response' => $tok, 'remoteip' => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')),
+  ));
+  $rv = curl_exec($cv);
+  curl_close($cv);
+  $verif = ($rv === false) ? null : json_decode($rv, true);
+  if (!is_array($verif) || empty($verif['success'])) {
+    error_log('Captcha rechazado: ' . ($rv === false ? 'sin respuesta' : $rv));
+    salida(array('error' => 'No se pudo verificar el captcha', 'codigo' => 'captcha'), 400);
+  }
+}
 
 function fila($k, $v) {
   if ($v === '') return '';

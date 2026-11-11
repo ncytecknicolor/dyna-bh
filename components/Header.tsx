@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { ruta } from '@/lib/base';
 import Link from 'next/link';
 import { Facebook, MessageCircle, Menu, X, ChevronDown } from 'lucide-react';
 import { servicios } from '@/lib/servicios';
@@ -33,7 +34,7 @@ export default function Header() {
       <header className={`fixed inset-x-0 top-0 z-40 border-b transition-all duration-300 ${solido ? 'border-black/10 bg-white/95 shadow-md' : 'border-black/5 bg-white/80'} backdrop-blur-md`}>
         <nav aria-label="Principal" className={`flex items-center justify-between px-6 transition-all duration-300 lg:px-14 ${solido ? 'py-2' : 'py-4'}`}>
           <Link href="/" aria-label="Dynamedia, inicio">
-            <Image src="/brand/logo-dynamedia.png" alt="Dynamedia" width={400} height={100} priority className={`h-auto transition-all duration-300 ${solido ? 'w-36 lg:w-44' : 'w-48 lg:w-60'}`} />
+            <Image src={ruta('/brand/logo-dynamedia.png')} alt="Dynamedia" width={400} height={100} priority className={`h-auto transition-all duration-300 ${solido ? 'w-36 lg:w-44' : 'w-48 lg:w-60'}`} />
           </Link>
           <div className="hidden items-center gap-8 lg:flex">
             {links.map((l) => (
@@ -74,10 +75,6 @@ export default function Header() {
           </div>
         )}
       </header>
-      <div className="fixed right-0 top-[38%] z-30 hidden flex-col md:flex">
-        <a href={FB} aria-label="Facebook" className="flex h-14 w-14 items-center justify-center bg-[#3b6bc6] text-white"><Facebook size={20} /></a>
-        <a href={WA} aria-label="WhatsApp" className="flex h-14 w-14 items-center justify-center bg-[#8cc152] text-white"><MessageCircle size={22} /></a>
-      </div>
     </>
   );
 }

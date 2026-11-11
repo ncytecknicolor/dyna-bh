@@ -41,4 +41,5 @@
 ## Publicación en Bluehost (sitio estático)
 - `next.config.mjs` usa `output: 'export'`: `npm run build` genera la carpeta `out/`.
 - GitHub construye el sitio solo (`.github/workflows/construir-sitio.yml`) y deja el resultado en Actions > "Artifacts" (sitio-bluehost).
-- `servidor/` trae lo que va en Apache/PHP: `htaccess.txt` (URLs limpias, HTTPS), `contact.php` (formulario con Resend) y `config.ejemplo.php` (copiar como `api/config.php` en el servidor con tu clave).
+- Para probar en dynamedia.mx/new el flujo usa por defecto la ruta `/new` (variable NEXT_PUBLIC_BASE_PATH); al ejecutar el flujo a mano se elige `raiz-dynamedia.mx` para la versión final.
+- `servidor/` trae lo que va en Apache/PHP: `htaccess-new.txt` y `htaccess-raiz.txt` (URLs limpias, HTTPS), `contact.php` (formulario con Resend) y `config.ejemplo.php` (copiar como `api/config.php` en el servidor con tu clave).

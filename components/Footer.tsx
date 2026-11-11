@@ -1,21 +1,20 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Facebook, Mail, MapPin, MessageCircle } from 'lucide-react';
+import { ruta } from '@/lib/base';
+import { Mail, MapPin } from 'lucide-react';
 import { servicios } from '@/lib/servicios';
 import { areas } from '@/lib/areas';
-import { EMAIL, FB, WA } from '@/lib/site';
+import { EMAIL } from '@/lib/site';
+import Redes from './Redes';
 
 export default function Footer() {
   return (
     <footer className="bg-grafito text-white/80">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 md:grid-cols-[1.2fr_1.4fr_1fr]">
         <div>
-          <Image src="/brand/logo-dynamedia.png" alt="Dynamedia" width={400} height={100} className="h-auto w-48 brightness-0 invert" />
+          <Image src={ruta('/brand/logo-dynamedia.png')} alt="Dynamedia" width={400} height={100} className="h-auto w-48 brightness-0 invert" />
           <p className="mt-5 max-w-xs text-sm">Diseño web, software a la medida y marketing digital en Monterrey, Nuevo León.</p>
-          <div className="mt-5 flex gap-3">
-            <a href={FB} aria-label="Facebook" className="rounded-full border border-white/25 p-2 hover:border-naranja hover:text-naranja"><Facebook size={18} /></a>
-            <a href={WA} aria-label="WhatsApp" className="rounded-full border border-white/25 p-2 hover:border-naranja hover:text-naranja"><MessageCircle size={18} /></a>
-          </div>
+          <Redes className="mt-5" claseEnlace="block rounded-full border border-white/25 p-2 hover:border-naranja hover:text-naranja" />
         </div>
         <nav aria-label="Servicios">
           <p className="font-display text-sm font-bold uppercase tracking-widest text-white">Servicios en Monterrey</p>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { ruta } from '@/lib/base';
 import { ArrowUpRight } from 'lucide-react';
 import { proyectos } from './proyectos';
 import { Tarjeta } from './ui';
@@ -19,7 +20,7 @@ export default function ProyectosRelacionados({ slugs, servicio }: { slugs: stri
               <Link href="/#proyectos" className="block h-full">
                 <Tarjeta className="h-full border border-black/10 bg-white" inner="relative flex h-full flex-col">
                   <div className="relative aspect-[2/1] overflow-hidden bg-grafito">
-                    <Image src={p.principal.src} fill sizes="(min-width:768px) 380px, 100vw" alt={`Sitio web de ${p.nombre}, proyecto de ${servicio.toLowerCase()} de Dynamedia`} className="object-cover object-top transition-transform duration-500 group-hover:scale-105" />
+                    <Image src={ruta(p.principal.src)} fill sizes="(min-width:768px) 380px, 100vw" alt={`Sitio web de ${p.nombre}, proyecto de ${servicio.toLowerCase()} de Dynamedia`} className="object-cover object-top transition-transform duration-500 group-hover:scale-105" />
                   </div>
                   <div className="p-5"><p className="font-display text-lg font-bold text-azul">{p.nombre}</p><p className="text-sm text-grafito/70">{p.categoria}</p></div>
                 </Tarjeta>
