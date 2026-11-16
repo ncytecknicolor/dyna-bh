@@ -1,4 +1,5 @@
-import { SITE, EMAIL, TEL, FB } from './site';
+import { SITE, EMAIL, TEL } from './site';
+import { redesActivas } from './redes';
 import { servicios } from './servicios';
 
 export const NEGOCIO_ID = `${SITE}/#negocio`;
@@ -22,7 +23,7 @@ export const negocioJsonLd = {
       foundingDate: '2010', email: EMAIL, telephone: TEL,
       address: { '@type': 'PostalAddress', addressLocality: 'Monterrey', addressRegion: 'Nuevo León', addressCountry: 'MX' },
       areaServed: [{ '@type': 'City', name: 'Monterrey' }, { '@type': 'State', name: 'Nuevo León' }, { '@type': 'Country', name: 'México' }],
-      sameAs: [FB],
+      sameAs: redesActivas.filter((r) => r.id !== 'whatsapp').map((r) => r.url),
       contactPoint: [{ '@type': 'ContactPoint', contactType: 'customer service', telephone: TEL, email: EMAIL, areaServed: 'MX', availableLanguage: 'es' }],
       hasOfferCatalog: {
         '@type': 'OfferCatalog', name: 'Servicios de Dynamedia',

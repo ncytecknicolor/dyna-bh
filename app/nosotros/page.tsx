@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { metaPagina } from '@/lib/seo';
 import { migas, jsonLd, NEGOCIO_ID } from '@/lib/schema';
-import { SITE } from '@/lib/site';
+import { SITE, WA } from '@/lib/site';
 import TestimoniosTabs from '@/components/TestimoniosTabs';
 import NosotrosTabs from '@/components/NosotrosTabs';
 import Reveal from '@/components/Reveal';
@@ -17,7 +17,6 @@ export const metadata: Metadata = metaPagina({
   path: '/nosotros', imagen: '/og/nosotros.jpg',
 });
 
-const WA = 'https://api.whatsapp.com/send?phone=528131979805&text=Hola%20quiero%20informacion%20de%20los%20servicios%20de%20Dynamedia';
 const cifras = [
   { n: 15, p: '+', l: 'años de experiencia' }, { n: 320, p: '+', l: 'proyectos desarrollados' },
   { n: 280, p: '+', l: 'clientes atendidos' }, { n: 4, p: '', l: 'áreas de especialidad' },
